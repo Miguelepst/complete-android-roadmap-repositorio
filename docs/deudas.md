@@ -16,15 +16,24 @@ mueve, no se copia.
 **Bloquea:** escribir cualquier lógica de dominio.
 **Se desancla cuando:** la CI se haya visto en verde.
 Cuatro piezas, cada una verificada antes de empezar la siguiente:
-1. Ejecución de pruebas con `gradlew` (`gradlew check`).
-2. `gradlew lint`.
+1. **HECHA.** Ejecución de pruebas con `gradlew check` (JUnit 4.13.2).
+   Verificada con una prueba desechable que no se commiteó: con un
+   fallo, `check` termina en rojo con código de salida 1; con la
+   prueba corregida, en verde con código 0 y el informe XML registra
+   la prueba ejecutada.
+2. `gradlew lint`. Política aprobada (lint estricto: avisos como
+   errores, reglas de "versión más nueva" silenciadas con motivo
+   escrito, y un baseline que solo puede encogerse). Falta
+   implementarla y registrarla en un ADR.
 3. Controles locales (hooks versionados), con tiempos medidos.
 4. CI en GitHub ejecutando el mismo comando, y protección de la rama
    `main` si el plan del repositorio la permite.
-**Pregunta abierta:** sin lógica no hay pruebas reales que escribir
-(el ADR 0005 descarta pruebas vacías). Cómo comprobar que la ejecución
-de pruebas funciona sin inventar una prueba falsa debe decidirse al
-llegar a la pieza 1.
+**Pregunta abierta:** con cero pruebas, `check` también sale en verde y
+con código 0 (comprobado). Solo cambia que no se genera la carpeta de
+resultados de pruebas. Cómo evitar que un verde sin pruebas pase
+inadvertido debe resolverse con la primera lógica, cuando haya algo
+real que contar. Una idea, sin verificar: exigir que exista al menos
+un resultado de prueba.
 
 ## ABIERTAS
 

@@ -21,13 +21,14 @@ Cuatro piezas, cada una verificada antes de empezar la siguiente:
    fallo, `check` termina en rojo con código de salida 1; con la
    prueba corregida, en verde con código 0 y el informe XML registra
    la prueba ejecutada.
-2. `gradlew lint`. Política aprobada (lint estricto: avisos como
-   errores, reglas de "versión más nueva" silenciadas con motivo
-   escrito, y un baseline que solo puede encogerse). Falta
-   implementarla y registrarla en un ADR.
+2. **HECHA.** Lint estricto (ADR 0006): avisos como errores, dos reglas
+   de "versión más nueva" silenciadas con motivo escrito y un baseline
+   de tres entradas que solo puede encogerse. Verificado en rojo, en
+   verde y con un aviso nuevo que sí falla.
 3. Controles locales (hooks versionados), con tiempos medidos.
 4. CI en GitHub ejecutando el mismo comando, y protección de la rama
-   `main` si el plan del repositorio la permite.
+   `main` si el plan del repositorio la permite. Considerar un control
+   que falle si el baseline crece (idea sin verificar).
 **Pregunta abierta:** con cero pruebas, `check` también sale en verde y
 con código 0 (comprobado). Solo cambia que no se genera la carpeta de
 resultados de pruebas. Cómo evitar que un verde sin pruebas pase
@@ -39,6 +40,24 @@ un resultado de prueba.
 
 Orden LIFO: la más reciente arriba.
 
+### Requisito de `targetSdk` de Google Play sin verificar
+El lint avisa de que existe una API más nueva que 36 (`OldTargetApi`,
+en el baseline). Subir `targetSdk` exigiría instalar
+`platforms;android-37`, y no se ha verificado qué exige Google Play al
+publicar.
+**Cuándo:** al preparar la publicación.
+
+### Icono de la aplicación
+El lint avisa de que no hay `android:icon` (`MissingApplicationIcon`,
+en el baseline).
+**Cuándo:** antes de publicar.
+
+### Textos de interfaz en recursos
+El lint avisa de texto fijo en `setText` (`SetTextI18n`, en el
+baseline). Los textos de interfaz irán en recursos de cadena desde el
+primer texto real. Qué idiomas se traducen es una decisión de producto
+aparte.
+**Cuándo:** fase de interfaz.
 ### Licencias del SDK sin verificar en una máquina limpia
 En el equipo de desarrollo las licencias del SDK ya estaban aceptadas,
 así que nunca se vio ese paso. En una máquina nueva, `sdkmanager

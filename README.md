@@ -60,6 +60,23 @@ adb install -r app\build\outputs\apk\debug\app-debug.apk
 adb shell am start -n com.example.vocabulario/.MainActivity
 ```
 
+## Controles locales (hooks de Git)
+
+El repositorio incluye hooks en `.githooks/`. Git no los activa solo:
+en cada clon nuevo hay que ejecutar una vez
+
+```powershell
+git config core.hooksPath .githooks
+```
+
+- `pre-commit`: revisa espacios sobrantes y marcas de conflicto en lo
+  preparado (segundos).
+- `pre-push`: ejecuta `./gradlew check` (pruebas y lint; de unos
+  segundos a unos 2 minutos).
+
+Se pueden saltar con `--no-verify`: son un aviso rápido, no una
+garantía. Ver ADR 0007.
+
 ## Preparación opcional del entorno
 
 Gradle guarda su caché en `C:\Users\<usuario>\.gradle`. Si el disco C:

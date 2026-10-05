@@ -25,7 +25,10 @@ Cuatro piezas, cada una verificada antes de empezar la siguiente:
    de "versión más nueva" silenciadas con motivo escrito y un baseline
    de tres entradas que solo puede encogerse. Verificado en rojo, en
    verde y con un aviso nuevo que sí falla.
-3. Controles locales (hooks versionados), con tiempos medidos.
+3. **HECHA.** Controles locales (ADR 0007): `.githooks/pre-commit`
+   (espacios y marcas de conflicto) y `.githooks/pre-push`
+   (`./gradlew check`), probados tanto abortando como dejando pasar. Se
+   activan por clon con `git config core.hooksPath .githooks`.
 4. CI en GitHub ejecutando el mismo comando, y protección de la rama
    `main` si el plan del repositorio la permite. Considerar un control
    que falle si el baseline crece (idea sin verificar).
@@ -39,6 +42,13 @@ un resultado de prueba.
 ## ABIERTAS
 
 Orden LIFO: la más reciente arriba.
+
+### Activación automática de los hooks en un clon nuevo
+`core.hooksPath` es configuración local de cada clon: hoy depende de
+ejecutar un comando una vez (README). No se ha verificado ninguna forma
+de automatizarlo, por ejemplo con una tarea de Gradle.
+**Cuándo:** antes de usar este repositorio como molde (ADR 0005, "Para
+quien copie este proyecto").
 
 ### Requisito de `targetSdk` de Google Play sin verificar
 El lint avisa de que existe una API más nueva que 36 (`OldTargetApi`,

@@ -1,0 +1,12 @@
+#!/bin/sh
+# Control local previo al push (ADR 0005): el mismo comando que ejecutara la CI.
+cd "$(git rev-parse --show-toplevel)" || exit 1
+if [ -n "$(git status --porcelain)" ]; then
+    echo "pre-push: aviso: hay cambios sin commitear; check valida el directorio de trabajo, no solo lo que se sube."
+fi
+echo "pre-push: ejecutando ./gradlew check (de unos segundos a unos 2 min)..."
+if ! ./gradlew check --console=plain; then
+    echo "pre-push: check fallo; el push se cancela."
+    echo "Corrige, o usa --no-verify bajo tu responsabilidad."
+    exit 1
+fi

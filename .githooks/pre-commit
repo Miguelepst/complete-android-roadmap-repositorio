@@ -1,0 +1,8 @@
+#!/bin/sh
+# Control local rapido (ADR 0005): espacios sobrantes y marcas de conflicto
+# en lo que esta preparado para commit. Debe tardar segundos.
+if ! git diff --cached --check; then
+    echo "pre-commit: problemas en lo preparado (ver arriba)."
+    echo "Corrigelos, o usa --no-verify bajo tu responsabilidad."
+    exit 1
+fi

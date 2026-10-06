@@ -43,6 +43,14 @@ un resultado de prueba.
 
 Orden LIFO: la más reciente arriba.
 
+### ADR de cadena de suministro y secretos
+Pendiente de registrar en un ADR: checksum de la distribución de Gradle
+fijado en el wrapper, validación del wrapper en la CI (a verificar con
+la versión actual de la acción), alertas de secret scanning y push
+protection activadas en GitHub, y la revisión del historial publicado
+sin hallazgos. El bloqueo de la push protection no se ha probado.
+**Cuándo:** junto con la CI (pieza 4).
+
 ### Activación automática de los hooks en un clon nuevo
 `core.hooksPath` es configuración local de cada clon: hoy depende de
 ejecutar un comando una vez (README). No se ha verificado ninguna forma
@@ -101,11 +109,6 @@ dispositivos cubrir.
 ### `applicationId = com.example.vocabulario` es un marcador
 Google Play no acepta identificadores que empiecen por `com.example`.
 **Cuándo:** antes de publicar.
-
-### `gradle-wrapper.jar` de la época de Gradle 8.7
-Funciona con Gradle 9.5.0 (verificado), pero los cuatro archivos del
-wrapper no tienen la misma versión.
-**Cuándo:** pronto, con `gradlew wrapper`.
 
 ## RESUELTAS
 

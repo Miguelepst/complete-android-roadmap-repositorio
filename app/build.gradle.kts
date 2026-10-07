@@ -20,8 +20,8 @@ android {
         // Avisos de "hay una versión más nueva": harían fallar el build por
         // el paso del tiempo y no por un cambio nuestro. Las versiones se
         // fijan a propósito (ADR 0002).
-        ignore += "AndroidGradlePluginVersion"
-        ignore += "GradleDependency"
+        disable += "AndroidGradlePluginVersion"
+        disable += "GradleDependency"
     }
 }
 

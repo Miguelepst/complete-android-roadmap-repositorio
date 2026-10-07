@@ -18,6 +18,10 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v6
+        with:
+          # Caché de código abierto (MIT). La "mejorada" viene por defecto y es
+          # un componente propietario con términos de uso propios.
+          cache-provider: basic
       - name: Diagnostico del entorno (temporal)
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"

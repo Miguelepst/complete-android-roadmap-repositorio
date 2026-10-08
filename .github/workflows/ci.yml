@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          # Caché de código abierto (MIT). La "mejorada" viene por defecto y es
+          # un componente propietario con términos de uso propios.
+          cache-provider: basic
+      - name: Check
+        run: ./gradlew check --console=plain

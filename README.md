@@ -5,8 +5,10 @@ espaciada. Es un proyecto de aprendizaje de arquitectura y prácticas
 profesionales de desarrollo, documentado paso a paso.
 
 **Estado:** hola mundo. Una Activity que muestra un texto. Compila e
-instala en un dispositivo real; todavía no tiene funcionalidad de
-dominio, pruebas automatizadas ni integración continua.
+instala en un dispositivo real. Todavía no tiene funcionalidad de dominio
+ni pruebas reales; sí tiene la infraestructura de calidad: `gradlew check`
+(pruebas y lint estricto con baseline), controles locales y una CI en
+GitHub Actions.
 
 ## Orden de arranque
 
@@ -33,8 +35,9 @@ Verificado en Windows 11 (64 bits) con PowerShell:
 No hace falta instalar Gradle: el proyecto incluye su *wrapper*, que
 descarga la versión exacta (9.5.0) en la primera ejecución.
 
-No se ha verificado: Linux, macOS, el uso de emulador, ni el aceptar
-las licencias del SDK en una máquina donde no estén ya aceptadas.
+No se ha verificado: macOS, el uso de emulador, ni el aceptar las
+licencias del SDK en un equipo donde no estén ya aceptadas. En Linux, la
+CI ejecuta `./gradlew check` (ADR 0008).
 
 ## Compilar
 
@@ -76,6 +79,14 @@ git config core.hooksPath .githooks
 
 Se pueden saltar con `--no-verify`: son un aviso rápido, no una
 garantía. Ver ADR 0007.
+
+## Integración continua
+
+`.github/workflows/ci.yml` ejecuta `./gradlew check` (pruebas y lint) en
+cada push, con Temurin 17 y el SDK de Android que trae el servidor de
+GitHub. Es el mismo comando que ejecuta el hook `pre-push`; los hooks se
+pueden saltar con `--no-verify` y la CI corre en el servidor. Ver ADR
+0008.
 
 ## Preparación opcional del entorno
 

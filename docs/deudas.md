@@ -29,9 +29,12 @@ Cuatro piezas, cada una verificada antes de empezar la siguiente:
    (espacios y marcas de conflicto) y `.githooks/pre-push`
    (`./gradlew check`), probados tanto abortando como dejando pasar. Se
    activan por clon con `git config core.hooksPath .githooks`.
-4. CI en GitHub ejecutando el mismo comando, y protección de la rama
-   `main` si el plan del repositorio la permite. Considerar un control
-   que falle si el baseline crece (idea sin verificar).
+4. **HECHA EN RAMA.** CI en GitHub (ADR 0008), verificada en verde y en
+   rojo. Pendiente: integrarla a `main` y verla en verde allí; proteger
+   `main` si el plan lo permite (decisión de flujo, probablemente por
+   pull request); un control que falle si el baseline crece (idea sin
+   verificar). Al verla en verde en `main`, esta deuda se retira y la
+   pregunta abierta pasa a ser una deuda abierta.
 **Pregunta abierta:** con cero pruebas, `check` también sale en verde y
 con código 0 (comprobado). Solo cambia que no se genera la carpeta de
 resultados de pruebas. Cómo evitar que un verde sin pruebas pase
@@ -43,13 +46,30 @@ un resultado de prueba.
 
 Orden LIFO: la más reciente arriba.
 
+### Medir el efecto de la caché de la CI
+`setup-gradle` solo escribe la caché desde la rama por defecto: en
+`ci-prueba` las ejecuciones parten de caché vacía (86 y 88 s). Tras
+integrar a `main`, comparar la primera ejecución (escribe) con la
+siguiente (lee).
+**Cuándo:** tras integrar a `main`.
+
+### Revisión del pre-push (ADR 0007)
+Se ejecuta también al borrar ramas remotas (`git push --delete` pagó un
+`check` completo de 29 s). Con el daemon frío costó entre 98 y 164 s en
+cinco mediciones, por encima del peor caso de ~100 s del ADR 0007; el
+texto del hook dice "unos 2 min". Si lleva a usar `--no-verify` con
+frecuencia, se reabre ese ADR con una decisión nueva.
+**Cuándo:** al revisar la experiencia de uso.
+
 ### ADR de cadena de suministro y secretos
 Pendiente de registrar en un ADR: checksum de la distribución de Gradle
-fijado en el wrapper, validación del wrapper en la CI (a verificar con
-la versión actual de la acción), alertas de secret scanning y push
-protection activadas en GitHub, y la revisión del historial publicado
-sin hallazgos. El bloqueo de la push protection no se ha probado.
-**Cuándo:** junto con la CI (pieza 4).
+fijado en el wrapper; validación del wrapper en la CI (verificada:
+`setup-gradle@v6` informa que los jar son válidos); fijar las acciones
+de la CI por hash de commit en lugar de etiqueta (hoy no); alertas de
+secret scanning y push protection activadas en GitHub; y la revisión del
+historial publicado sin hallazgos. El bloqueo de la push protection y el
+rechazo de un checksum erróneo no se han probado.
+**Cuándo:** tras integrar la CI a `main`.
 
 ### Activación automática de los hooks en un clon nuevo
 `core.hooksPath` es configuración local de cada clon: hoy depende de
@@ -76,12 +96,13 @@ baseline). Los textos de interfaz irán en recursos de cadena desde el
 primer texto real. Qué idiomas se traducen es una decisión de producto
 aparte.
 **Cuándo:** fase de interfaz.
-### Licencias del SDK sin verificar en una máquina limpia
-En el equipo de desarrollo las licencias del SDK ya estaban aceptadas,
-así que nunca se vio ese paso. En una máquina nueva, `sdkmanager
---licenses` puede ser necesario y el README no lo cubre.
-**Cuándo:** al configurar el CI (paso 2), que parte de una máquina
-limpia.
+### Licencias del SDK en un equipo de desarrollo nuevo
+La CI no las necesita: el servidor trae el SDK con build-tools 36.0.0 y
+platform 36, y `check` pasó sin aceptar licencias (ADR 0008). En un
+equipo nuevo, `sdkmanager --licenses` puede ser necesario y el README no
+lo cubre; tampoco se verificó qué pasa si se necesita un componente que
+el SDK no tenga instalado.
+**Cuándo:** antes de usar este repositorio como molde.
 
 ### Limpieza de la caché antigua de Gradle en C:
 `C:\Users\<usuario>\.gradle` conserva 2,32 GB de proyectos anteriores
